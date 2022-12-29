@@ -124,13 +124,14 @@ export const tryEditAccount = async(idx, userID, nickname, name, surename, bio, 
             console.log(result)
             if( result.records.length === 0 )  {
                 node = null;
-                alert( 'Wystąpił błąd. Możliwe:\n - Zajęta nazwa id \n - Błędne hasło' )
+                alert( 'Wystąpił błąd' )
             }
             else{
                 const singleRecord = result.records[0]
                 node = singleRecord.get(0)
             }
     }catch (e) {
+        alert(e)
         console.log(e)
     }finally {
           await session.close()
