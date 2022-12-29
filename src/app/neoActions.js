@@ -12,7 +12,10 @@ export const tryLogin = async(logID, pass)=>{
               'MATCH (a:USER {idx: $idx, pass: $pass}) RETURN a',
               { idx: logID, pass: pass  }
             )
-        if( result.records.length === 0 ) return null;
+        if( result.records.length === 0 ) {
+            node = null;
+            alert( 'Logowanie nie powidoło się' )
+        }
         else{
             const singleRecord = result.records[0]
             node = singleRecord.get(0)
@@ -61,7 +64,10 @@ export const tryCreateAccount = async(userID, nickname, name, surename, logID, e
                     pass: pass }
             )
             console.log(result)
-            if( result.records.length === 0 ) return null;
+            if( result.records.length === 0 ) {
+                node = null;
+                alert( 'Wystąpił błąd' )
+            }
             else{
                 const singleRecord = result.records[0]
                 node = singleRecord.get(0)
@@ -81,6 +87,7 @@ export const tryEditAccount = async(idx, userID, nickname, name, surename, bio, 
     if(nickname.length === 0)           {alert('Brak nicku'); return null;} 
     if(name.length === 0)               {alert('Brak imienia'); return null;}
     if(surename.length === 0)           {alert('Brak nazwiska'); return null;} 
+    if(pass.length === 0)               {alert('Potwierdź zmiany wpisując obecne hasło'); return null;} 
     if( !(newPass === newPass2) )       {alert('Hasła nie są takie same'); return null;}
     
     var oldPassword = pass;
@@ -115,7 +122,10 @@ export const tryEditAccount = async(idx, userID, nickname, name, surename, bio, 
                 avatar: avatar, bio: bio}
             )
             console.log(result)
-            if( result.records.length === 0 ) return null;
+            if( result.records.length === 0 )  {
+                node = null;
+                alert( 'Wystąpił błąd. Możliwe:\n - Zajęta nazwa id \n - Błędne hasło' )
+            }
             else{
                 const singleRecord = result.records[0]
                 node = singleRecord.get(0)
@@ -149,6 +159,7 @@ export const trySend= async(idx, content)=>{
             )
     }catch (e) {
         console.log(e)
+        alert('Wystąpił błąd')
         node = null
     } finally {
           await session.close()
@@ -173,7 +184,9 @@ export const tryGetContent= async()=>{
               ' u.bio, p.content, pd.send, id(pd) ' +
               ' ORDER BY id(pd) DESC; ',
             )
-        if( result.records.length === 0 ) return ['ERROR'];
+        if( result.records.length === 0 ){
+            alert('Nie wczytano danych')
+        }
         else{
             node = result.records
         }
